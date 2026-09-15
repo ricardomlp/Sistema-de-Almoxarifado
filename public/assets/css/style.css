@@ -1,0 +1,546 @@
+/* =====================================================================
+   SISTEMA DE ALMOXARIFADO — folha de estilos
+   ---------------------------------------------------------------------
+   Direção de design: o sistema é ferramenta de piso de operação, não
+   vitrine — a identidade vem da sinalização real de almoxarifado/
+   logística (azul-aço para ação normal, âmbar para atenção, vermelho
+   para crítico, verde para confirmação), não de decoração. O único
+   elemento "de assinatura" é a faixa de risco (hachura âmbar/aço) no
+   topo e nas linhas que pedem atenção — o resto fica disciplinado,
+   denso e rápido de escanear em tabela.
+
+   Paleta:
+     --cor-fundo:      #EEF1F3  (cinza-aço claro, não o creme padrão)
+     --cor-superficie: #FFFFFF
+     --cor-tinta:      #1B2733  (azul-ardósia quase preto)
+     --cor-primaria:   #2C4A66  (azul-aço — ações normais)
+     --cor-primaria-escura: #1C3247 (topo/cabeçalhos de tabela)
+     --cor-ambar:      #E2A33B  (atenção/caution)
+     --cor-critico:    #C1392B  (vermelho de segurança)
+     --cor-sucesso:    #2F7A4C  (verde de confirmação)
+     --cor-borda:      #CBD2D9
+   Tipografia: Barlow Condensed para títulos (referência a sinalização
+   industrial/rótulos de prateleira), Inter para corpo e dados
+   tabulares, monoespaçada só para SKU/códigos (uso funcional).
+   ===================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+    --cor-fundo: #EEF1F3;
+    --cor-superficie: #FFFFFF;
+    --cor-tinta: #1B2733;
+    --cor-tinta-suave: #4C5B6B;
+    --cor-primaria: #2C4A66;
+    --cor-primaria-escura: #1C3247;
+    --cor-primaria-hover: #234058;
+    --cor-ambar: #E2A33B;
+    --cor-critico: #C1392B;
+    --cor-sucesso: #2F7A4C;
+    --cor-borda: #CBD2D9;
+    --cor-borda-forte: #9FACB8;
+    --fonte-titulo: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    --fonte-corpo: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --fonte-codigo: ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+    --raio: 3px;
+    --sombra: 0 1px 2px rgba(27, 39, 51, 0.08);
+}
+
+/* ---------- Reset básico ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { font-size: 16px; }
+
+body {
+    margin: 0;
+    background: var(--cor-fundo);
+    color: var(--cor-tinta);
+    font-family: var(--fonte-corpo);
+    line-height: 1.5;
+    font-feature-settings: 'tnum' 1; /* números tabulares alinhados nas colunas de quantidade */
+}
+
+/* Faixa de risco — usada uma única vez, no topo de cada página, como
+   a assinatura visual do sistema (referência direta à hachura de piso
+   de almoxarifado). Fica quieta o resto da interface. */
+body::before {
+    content: '';
+    display: block;
+    height: 6px;
+    background: repeating-linear-gradient(
+        135deg,
+        var(--cor-ambar) 0px, var(--cor-ambar) 14px,
+        var(--cor-primaria-escura) 14px, var(--cor-primaria-escura) 28px
+    );
+}
+
+main, body > h1, body > form, body > table, body > p, body > ul, body > nav {
+    max-width: 1040px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1, h2, h3 {
+    font-family: var(--fonte-titulo);
+    font-weight: 700;
+    color: var(--cor-primaria-escura);
+    letter-spacing: 0.01em;
+    margin: 1.4rem auto 0.9rem;
+    max-width: 1040px;
+    padding: 0 1.25rem;
+}
+
+h1 { font-size: 2rem; border-bottom: 3px solid var(--cor-ambar); padding-bottom: 0.4rem; }
+h2 { font-size: 1.4rem; margin-top: 2rem; }
+
+p, ul, table, form { padding: 0 1.25rem; }
+
+a {
+    color: var(--cor-primaria);
+    text-decoration: none;
+    font-weight: 500;
+}
+a:hover { text-decoration: underline; color: var(--cor-primaria-hover); }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--cor-primaria);
+    outline-offset: 2px;
+}
+
+/* ---------- Mensagens de estado ---------- */
+.sucesso, .erro, .ajuda {
+    margin: 0 auto 1rem;
+    max-width: 1040px;
+    padding: 0.75rem 1rem;
+    border-radius: var(--raio);
+    font-size: 0.95rem;
+}
+
+.sucesso {
+    background: #E7F3EB;
+    color: var(--cor-sucesso);
+    border: 1px solid #BEE0C8;
+}
+
+.erro {
+    background: #FBEAE8;
+    color: var(--cor-critico);
+    border: 1px solid #F0C3BC;
+}
+
+.ajuda {
+    background: transparent;
+    color: var(--cor-tinta-suave);
+    font-size: 0.875rem;
+    padding: 0 1.25rem;
+}
+
+/* ---------- Formulários ---------- */
+form {
+    max-width: 1040px;
+    margin: 0 auto 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+form.linha-item,
+#tabela-itens form { display: block; } /* evita conflito quando <select>/<input> ficam dentro de <td> */
+
+label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--cor-primaria-escura);
+    margin-top: 0.75rem;
+}
+
+label input[type="checkbox"] {
+    margin-right: 0.5rem;
+    font-weight: 400;
+}
+
+input, select, textarea {
+    font-family: var(--fonte-corpo);
+    font-size: 1rem;
+    color: var(--cor-tinta);
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-borda-forte);
+    border-radius: var(--raio);
+    padding: 0.55rem 0.65rem;
+    max-width: 420px;
+}
+
+input[type="checkbox"] { max-width: none; width: auto; }
+
+textarea { max-width: 640px; resize: vertical; }
+
+input:disabled {
+    background: var(--cor-fundo);
+    color: var(--cor-tinta-suave);
+}
+
+button, .botao {
+    font-family: var(--fonte-corpo);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #FFFFFF;
+    background: var(--cor-primaria);
+    border: none;
+    border-radius: var(--raio);
+    padding: 0.65rem 1.25rem;
+    margin-top: 1.1rem;
+    width: fit-content;
+    cursor: pointer;
+    box-shadow: var(--sombra);
+}
+button:hover { background: var(--cor-primaria-hover); }
+
+/* Botão de recusa/inativação — semântica de atenção, não de erro grave */
+button[value="recusar"] {
+    background: var(--cor-superficie);
+    color: var(--cor-critico);
+    border: 1px solid var(--cor-critico);
+    box-shadow: none;
+}
+button[value="recusar"]:hover { background: #FBEAE8; }
+
+/* ---------- Tabelas ---------- */
+table {
+    width: 100%;
+    max-width: 1040px;
+    margin: 0 auto 1.5rem;
+    border-collapse: collapse;
+    background: var(--cor-superficie);
+    box-shadow: var(--sombra);
+}
+
+thead th {
+    background: var(--cor-primaria-escura);
+    color: #FFFFFF;
+    font-family: var(--fonte-titulo);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: left;
+    padding: 0.6rem 0.8rem;
+    letter-spacing: 0.02em;
+}
+
+tbody td {
+    padding: 0.55rem 0.8rem;
+    border-bottom: 1px solid var(--cor-borda);
+    font-size: 0.95rem;
+}
+
+tbody tr:nth-child(even) { background: #F6F8F9; }
+tbody tr:hover { background: #EAF0F4; }
+
+/* SKU e códigos — monoespaçada por função (alinhamento), não estilo */
+td:first-child { font-family: var(--fonte-codigo); font-size: 0.9rem; }
+
+/* Linha que precisa de atenção (estoque crítico, vencimento, divergência
+   de inventário) — usa a MESMA linguagem visual da faixa de risco do
+   topo, reforçando o significado de "cuidado" no mesmo vocabulário. */
+tr.linha-alerta {
+    background: repeating-linear-gradient(
+        135deg,
+        #FBF1DF 0px, #FBF1DF 10px,
+        #F7E6C4 10px, #F7E6C4 20px
+    ) !important;
+    border-left: 4px solid var(--cor-ambar);
+}
+tr.linha-alerta:hover { filter: brightness(0.97); }
+
+/* Curva ABC — hierarquia visual sem depender só de texto */
+.classe-A { border-left: 4px solid var(--cor-critico); }
+.classe-B { border-left: 4px solid var(--cor-ambar); }
+.classe-C { border-left: 4px solid var(--cor-borda-forte); }
+
+/* ---------- Login: mural ao lado do formulário, rodapé abaixo das duas colunas ---------- */
+.pagina-login { padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
+.pagina-login::before { display: none; }
+
+.login-page {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    flex: 1; /* ocupa todo o espaço antes do rodapé */
+}
+
+.login-visual {
+    background: #E4EAF0; /* variação clara da paleta, distinta do fundo cinza do painel do formulário */
+    color: var(--cor-tinta);
+    box-sizing: border-box;
+    padding: 3rem 3.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.5rem;
+    border-right: 1px solid var(--cor-borda);
+}
+
+.login-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+.login-logo span {
+    font-family: var(--fonte-titulo);
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--cor-primaria-escura);
+}
+
+.login-tagline {
+    color: var(--cor-tinta-suave);
+    font-size: 1rem;
+    margin: -1rem 0 0.5rem;
+    padding: 0;
+}
+
+.mural-avisos {
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-left: 4px solid var(--cor-ambar);
+    border-radius: var(--raio);
+    padding: 1.25rem 1.5rem;
+    box-shadow: var(--sombra);
+}
+.mural-avisos h2 {
+    font-family: var(--fonte-titulo);
+    color: var(--cor-ambar);
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0 0 0.9rem;
+    padding: 0;
+    max-width: none;
+    border: none;
+}
+.mural-avisos ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+.mural-avisos li {
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--cor-tinta-suave);
+    border-bottom: 1px solid var(--cor-borda);
+    padding-bottom: 0.7rem;
+}
+.mural-avisos li:last-child { border-bottom: none; padding-bottom: 0; }
+.mural-avisos li strong { color: var(--cor-primaria-escura); }
+.ajuda-mural {
+    font-size: 0.72rem;
+    color: var(--cor-tinta-suave);
+    opacity: 0.75;
+    margin-top: 0.9rem;
+    padding: 0;
+}
+
+.login-form-panel {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--cor-fundo);
+    padding: 2.5rem;
+}
+
+.login-container {
+    max-width: 380px;
+    width: 100%;
+    padding: 2rem;
+    background: var(--cor-superficie);
+    border-radius: var(--raio);
+    box-shadow: 0 4px 16px rgba(27, 39, 51, 0.12);
+    margin: 0;
+}
+.login-container h1 {
+    padding: 0;
+    margin: 0 0 1.5rem;
+    max-width: none;
+    font-size: 1.6rem;
+    text-align: center;
+    border-bottom: none;
+}
+.login-container form { margin: 0; }
+.login-container input { max-width: 100%; }
+
+.linha-label-com-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 0.75rem;
+}
+.linha-label-com-link label { margin-top: 0; }
+.link-esqueci-senha { font-size: 0.85rem; }
+
+.botao-pill {
+    width: 100%;
+    margin-top: 1.5rem;
+    border-radius: 999px;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    text-align: center;
+    justify-content: center;
+}
+
+.login-nota-acesso {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--cor-tinta-suave);
+    margin: 1.5rem 0 0;
+    padding: 0;
+}
+
+.rodape-login {
+    text-align: center;
+    padding: 0.85rem;
+    font-size: 0.8rem;
+    color: var(--cor-tinta-suave);
+    background: var(--cor-superficie);
+    border-top: 1px solid var(--cor-borda);
+}
+.rodape-login p { padding: 0; margin: 0; }
+
+@media (max-width: 860px) {
+    .login-page { grid-template-columns: 1fr; }
+    .login-visual { padding: 2rem; }
+    .login-form-panel { padding: 2rem 1.25rem; }
+}
+
+/* ---------- Erro 403 ---------- */
+.erro-container {
+    max-width: 480px;
+    margin: 4rem auto;
+    padding: 2rem;
+    text-align: center;
+    background: var(--cor-superficie);
+    border-top: 6px solid var(--cor-critico);
+    box-shadow: var(--sombra);
+}
+.erro-container h1 { border-bottom: none; padding: 0; color: var(--cor-critico); }
+
+/* ---------- Log de Auditoria ---------- */
+.filtros-auditoria {
+    display: flex;
+    flex-direction: row; /* sobrescreve o "form { flex-direction: column }" geral do site */
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 1rem;
+    max-width: 1040px;
+}
+.campo-filtro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+.campo-filtro label { margin-top: 0; font-size: 0.8rem; }
+.campo-filtro select,
+.campo-filtro input { max-width: 180px; }
+.campo-filtro-acoes {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+}
+.campo-filtro-acoes button { margin-top: 0; }
+
+.badge-acao {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+.badge-create { background: var(--cor-sucesso); }
+.badge-update { background: var(--cor-ambar); color: var(--cor-primaria-escura); }
+.badge-delete { background: var(--cor-critico); }
+
+details summary {
+    cursor: pointer;
+    color: var(--cor-primaria);
+    font-size: 0.85rem;
+}
+details pre {
+    background: var(--cor-fundo);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio);
+    padding: 0.6rem;
+    font-size: 0.78rem;
+    overflow-x: auto;
+    max-width: 380px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.paginacao {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1040px;
+}
+
+/* ---------- Dashboard ---------- */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--cor-primaria-escura);
+    color: #FFFFFF;
+    padding: 0.85rem 1.25rem;
+}
+.topbar a { color: #FFFFFF; text-decoration: underline; }
+
+.menu-dashboard {
+    max-width: 1040px;
+    margin: 0 auto 1.5rem;
+    padding: 0 1.25rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.75rem;
+}
+.menu-dashboard a {
+    display: block;
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-left: 4px solid var(--cor-primaria);
+    border-radius: var(--raio);
+    padding: 0.9rem 1rem;
+    font-weight: 600;
+    color: var(--cor-primaria-escura);
+    text-decoration: none;
+    box-shadow: var(--sombra);
+}
+.menu-dashboard a:hover { border-left-color: var(--cor-ambar); background: #F6F8F9; }
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 640px) {
+    h1 { font-size: 1.5rem; }
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
+    tbody tr {
+        margin-bottom: 0.75rem;
+        border: 1px solid var(--cor-borda);
+        border-radius: var(--raio);
+    }
+    tbody td {
+        border-bottom: none;
+        padding: 0.4rem 0.8rem;
+    }
+    tbody td::before {
+        content: attr(data-rotulo);
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--cor-tinta-suave);
+    }
+    .topbar { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+}
+
+/* ---------- Acessibilidade: respeita preferência de menos movimento ---------- */
+@media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+}

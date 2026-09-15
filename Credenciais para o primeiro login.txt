@@ -1,0 +1,27 @@
+Campo	Valor
+E-mail	admin@empresa.com.br
+Senha	TrocarSenha@123
+
+
+almoxarifado/
+├── config/              → conexão PDO + constantes de ambiente
+├── src/
+│   ├── Middlewares/      → AuthMiddleware (sessão) + RoleMiddleware (RBAC)
+│   └── Models/           → Usuario, Categoria, Setor, Fornecedor, Produto,
+│                           NotaFiscal, Entrada, Requisicao, Transferencia,
+│                           Inventario, Alerta, Relatorio
+├── public/               → uma pasta por módulo (usuarios, categorias, setores,
+│                           fornecedores, produtos, notas_fiscais, entradas,
+│                           requisicoes, transferencias, inventario, alertas,
+│                           relatorios) + index.php (dashboard) e login_process/logout
+└── views/                → espelha a mesma estrutura de public/
+
+
+Pendências conscientes, para quando quiser retomar
+CSS (public/assets/css/style.css) — nenhuma tela tem estilo visual ainda.
+Tela de troca de senha (hoje só o Admin edita senha de terceiros).
+Upload do anexo da NF (arquivo_anexo).
+Aprovação em duas etapas da requisição (hoje aprovação + atendimento são a mesma ação).
+Custo histórico real em movimentacoes_saida (relatórios usam custo atual como aproximação).
+
+

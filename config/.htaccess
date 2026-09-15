@@ -1,0 +1,3 @@
+# Esta pasta só deve ser acessada via require() de dentro do PHP,
+# nunca diretamente pelo navegador — contém credenciais de banco de dados.
+Require all denied

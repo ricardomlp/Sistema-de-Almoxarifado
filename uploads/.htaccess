@@ -1,0 +1,4 @@
+# Os anexos de NF só devem ser baixados através de
+# public/notas_fiscais/download_anexo.php, que confere login e papel
+# antes de entregar o arquivo — nunca diretamente pelo navegador.
+Require all denied

@@ -1,0 +1,3 @@
+# Esta pasta (Models e Middlewares) só deve ser acessada via require()
+# de dentro do PHP, nunca diretamente pelo navegador.
+Require all denied

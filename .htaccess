@@ -1,0 +1,3 @@
+# Desativa a listagem de arquivos quando uma pasta sem index.php é acessada
+# diretamente pelo navegador (ex.: http://localhost/almoxarifado/views/).
+Options -Indexes
