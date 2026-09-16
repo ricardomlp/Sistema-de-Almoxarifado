@@ -1,6 +1,6 @@
 Campo	Valor
 E-mail	admin@empresa.com.br
-Senha	TrocarSenha@123
+Senha	123456789
 
 
 almoxarifado/
